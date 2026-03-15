@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="public_consent_form" name="Public Consent Form">
+        <html>
+            <head>
+                <meta charset="utf-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                <title>Clinic Consent</title>
+                <style>
+                    body {
+                        margin: 0;
+                        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                        background: #f4f7f5;
+                        color: #24323d;
+                    }
+                    .hc-consent-shell {
+                        max-width: 760px;
+                        margin: 0 auto;
+                        padding: 32px 16px 48px;
+                    }
+                    .hc-consent-card {
+                        background: #ffffff;
+                        border: 1px solid #d7e0dc;
+                        border-radius: 16px;
+                        padding: 28px 24px;
+                        box-shadow: 0 10px 30px rgba(36, 50, 61, 0.08);
+                    }
+                    h1 {
+                        margin: 0 0 8px;
+                        font-size: 30px;
+                        line-height: 1.2;
+                    }
+                    p {
+                        margin: 0 0 16px;
+                        line-height: 1.5;
+                    }
+                    .hc-meta {
+                        color: #5c6b74;
+                        font-size: 14px;
+                    }
+                    .hc-error {
+                        margin: 16px 0;
+                        padding: 12px 14px;
+                        border-radius: 10px;
+                        background: #fff0ee;
+                        color: #8c2c1d;
+                    }
+                    .hc-field {
+                        margin-top: 18px;
+                    }
+                    .hc-field label {
+                        display: block;
+                        font-weight: 600;
+                        margin-bottom: 8px;
+                    }
+                    .hc-field input,
+                    .hc-field textarea {
+                        width: 100%;
+                        padding: 12px 14px;
+                        border-radius: 12px;
+                        border: 1px solid #bcc9c3;
+                        box-sizing: border-box;
+                        font: inherit;
+                        color: inherit;
+                        background: #fcfdfc;
+                    }
+                    .hc-field textarea {
+                        min-height: 108px;
+                    }
+                    .hc-submit {
+                        margin-top: 24px;
+                        border: 0;
+                        border-radius: 999px;
+                        padding: 12px 18px;
+                        background: #2b6c5a;
+                        color: #ffffff;
+                        font: inherit;
+                        font-weight: 600;
+                        cursor: pointer;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="hc-consent-shell">
+                    <div class="hc-consent-card">
+                        <h1>Patient Consent</h1>
+                        <p class="hc-meta">
+                            <t t-esc="record.practice_id.display_name"/>
+                            <t t-if="record.patient_id">
+                                <span> · </span>
+                                <t t-esc="record.patient_id.display_name"/>
+                            </t>
+                        </p>
+                        <p>Please review and complete the consent information below, then submit the form when you are done.</p>
+                        <div t-if="error_message" class="hc-error">
+                            <t t-esc="error_message"/>
+                        </div>
+                        <form t-att-action="form_action" method="post">
+                            <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
+                            <div class="hc-field">
+                                <label for="consent_given_by">Consent Given By</label>
+                                <input id="consent_given_by" name="consent_given_by" type="text" placeholder="Name of the person giving consent" t-att-value="form_values.get('consent_given_by')"/>
+                            </div>
+                            <div class="hc-field">
+                                <label for="consent_summary">Consent Summary</label>
+                                <textarea id="consent_summary" name="consent_summary" placeholder="Brief acknowledgment or consent summary"><t t-esc="form_values.get('consent_summary')"/></textarea>
+                            </div>
+                            <div class="hc-field">
+                                <label for="notes">Additional Notes</label>
+                                <textarea id="notes" name="notes" placeholder="Anything else the clinic should know"><t t-esc="form_values.get('notes')"/></textarea>
+                            </div>
+                            <button type="submit" class="hc-submit">Submit Consent</button>
+                        </form>
+                    </div>
+                </div>
+            </body>
+        </html>
+    </template>
+
+    <template id="public_consent_done" name="Public Consent Submitted">
+        <html>
+            <head>
+                <meta charset="utf-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                <title>Consent Submitted</title>
+                <style>
+                    body {
+                        margin: 0;
+                        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                        background: #f4f7f5;
+                        color: #24323d;
+                    }
+                    .hc-consent-shell {
+                        max-width: 760px;
+                        margin: 0 auto;
+                        padding: 32px 16px 48px;
+                    }
+                    .hc-consent-card {
+                        background: #ffffff;
+                        border: 1px solid #d7e0dc;
+                        border-radius: 16px;
+                        padding: 28px 24px;
+                        box-shadow: 0 10px 30px rgba(36, 50, 61, 0.08);
+                    }
+                    h1 {
+                        margin: 0 0 8px;
+                        font-size: 30px;
+                        line-height: 1.2;
+                    }
+                    p {
+                        margin: 0 0 16px;
+                        line-height: 1.5;
+                    }
+                    .hc-meta {
+                        color: #5c6b74;
+                        font-size: 14px;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="hc-consent-shell">
+                    <div class="hc-consent-card">
+                        <h1>
+                            <t t-if="already_submitted">Consent Already Received</t>
+                            <t t-else="">Consent Submitted</t>
+                        </h1>
+                        <p class="hc-meta">
+                            <t t-esc="record.practice_id.display_name"/>
+                        </p>
+                        <p t-if="already_submitted">This consent was already submitted. No further action is needed, and you can close this page.</p>
+                        <p t-else="">Your consent has been submitted successfully. You can close this page.</p>
+                    </div>
+                </div>
+            </body>
+        </html>
+    </template>
+</odoo>

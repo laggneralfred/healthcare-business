@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_hc_intake_templates"
+        name="Intake Templates"
+        parent="hc_practice_core.menu_hc_configuration"
+        action="hc_intake.action_hc_intake_templates"
+        sequence="40"
+        groups="hc_practice_core.hc_group_owner"
+    />
+</odoo>

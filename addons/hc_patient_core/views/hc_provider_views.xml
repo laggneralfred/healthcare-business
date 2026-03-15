@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_users_form_hc_provider" model="ir.ui.view">
+        <field name="name">res.users.form.hc.provider</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="hc_practice_core.view_users_form_hc_practice"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='practice_id']" position="after">
+                <field name="is_hc_provider" groups="hc_practice_core.hc_group_owner"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

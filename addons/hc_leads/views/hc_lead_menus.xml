@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_hc_leads"
+        name="Lead Inquiries"
+        parent="hc_practice_core.menu_hc_root"
+        action="hc_leads.action_hc_leads"
+        sequence="20"
+        groups="hc_practice_core.hc_group_owner,hc_practice_core.hc_group_front_desk"
+    />
+</odoo>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_hc_patients"
+        name="Patients"
+        parent="hc_practice_core.menu_hc_root"
+        action="hc_patient_core.action_hc_patients"
+        sequence="10"
+        groups="hc_practice_core.hc_group_owner,hc_practice_core.hc_group_front_desk"
+    />
+</odoo>

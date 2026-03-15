@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hc_appointment_form_intake" model="ir.ui.view">
+        <field name="name">hc.appointment.form.intake</field>
+        <field name="model">hc.appointment</field>
+        <field name="inherit_id" ref="hc_scheduling.view_hc_appointment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/group/group[1]" position="after">
+                <group string="Intake">
+                    <field name="intake_status" readonly="1"/>
+                    <button
+                        name="action_record_intake"
+                        string="Record Intake"
+                        type="object"
+                        class="btn-secondary"
+                        groups="hc_practice_core.hc_group_owner,hc_practice_core.hc_group_front_desk"
+                    />
+                    <button
+                        name="action_share_intake_link"
+                        string="Get Intake Link"
+                        type="object"
+                        class="btn-secondary"
+                        groups="hc_practice_core.hc_group_owner,hc_practice_core.hc_group_front_desk"
+                    />
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

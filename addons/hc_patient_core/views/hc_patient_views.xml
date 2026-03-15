@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hc_patient_list" model="ir.ui.view">
+        <field name="name">res.partner.list.hc.patient</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <field name="practice_id"/>
+                <field name="city"/>
+                <field name="state_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hc_patient_form" model="ir.ui.view">
+        <field name="name">res.partner.form.hc.patient</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="priority">30</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet" position="before">
+                <header>
+                    <button
+                        name="action_create_appointment"
+                        string="Create Appointment"
+                        type="object"
+                        class="btn-primary"
+                        groups="hc_practice_core.hc_group_owner,hc_practice_core.hc_group_front_desk"
+                    />
+                </header>
+            </xpath>
+            <xpath expr="//sheet" position="replace">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="Patient Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Healthcare">
+                            <field name="is_hc_patient"/>
+                            <field name="practice_id"/>
+                        </group>
+                        <group string="Contact">
+                            <field name="phone"/>
+                            <field name="email"/>
+                        </group>
+                    </group>
+                    <group string="Address">
+                        <field name="street"/>
+                        <field name="street2"/>
+                        <group>
+                            <field name="city"/>
+                            <field name="state_id"/>
+                        </group>
+                        <group>
+                            <field name="zip"/>
+                            <field name="country_id"/>
+                        </group>
+                    </group>
+                    <group string="Notes">
+                        <field name="comment" placeholder="Patient notes"/>
+                    </group>
+                </sheet>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_hc_patients" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_hc_patient', '=', True)]</field>
+        <field name="context">{'default_is_hc_patient': True}</field>
+        <field name="help" type="html">
+            <p>Use Patients for established patient records that the clinic is actively managing.</p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,26 @@
+{
+    "name": "Healthcare Consent",
+    "summary": "Sprint 2 consent readiness foundation",
+    "version": "19.0.1.0.0",
+    "category": "Healthcare",
+    "author": "Codex",
+    "license": "LGPL-3",
+    "depends": [
+        "base",
+        "hc_practice_core",
+        "hc_patient_core",
+        "hc_scheduling",
+    ],
+    "data": [
+        "security/ir.model.access.csv",
+        "views/hc_consent_template_views.xml",
+        "views/hc_consent_record_views.xml",
+        "views/hc_consent_share_link_wizard_views.xml",
+        "views/hc_consent_public_templates.xml",
+        "views/hc_consent_patient_views.xml",
+        "views/hc_consent_appointment_views.xml",
+        "views/hc_consent_menus.xml",
+    ],
+    "installable": True,
+    "application": True,
+}

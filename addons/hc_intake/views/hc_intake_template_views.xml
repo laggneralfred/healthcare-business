@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hc_intake_template_list" model="ir.ui.view">
+        <field name="name">hc.intake.template.list</field>
+        <field name="model">hc.intake.template</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="practice_id"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hc_intake_template_form" model="ir.ui.view">
+        <field name="name">hc.intake.template.form</field>
+        <field name="model">hc.intake.template</field>
+        <field name="arch" type="xml">
+            <form string="Intake Template">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="practice_id"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hc_intake_templates" model="ir.actions.act_window">
+        <field name="name">Intake Templates</field>
+        <field name="res_model">hc.intake.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p>Use Intake Templates to define the basic intake records staff can mark as complete.</p>
+        </field>
+    </record>
+</odoo>

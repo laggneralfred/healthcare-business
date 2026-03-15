@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hc_checkout_session_list_pricing" model="ir.ui.view">
+        <field name="name">hc.checkout.session.list.pricing</field>
+        <field name="model">hc.checkout.session</field>
+        <field name="inherit_id" ref="hc_checkout.view_hc_checkout_session_list"/>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <xpath expr="//list/field[@name='amount_total']" position="before">
+                <field name="service_fee_id" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_hc_checkout_session_form_pricing" model="ir.ui.view">
+        <field name="name">hc.checkout.session.form.pricing</field>
+        <field name="model">hc.checkout.session</field>
+        <field name="inherit_id" ref="hc_checkout.view_hc_checkout_session_form"/>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='checkout_line_ids']/list/field[@name='description']" position="before">
+                <field name="service_fee_id" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_hc_root"
+        name="Healthcare"
+        sequence="10"
+        groups="hc_practice_core.hc_group_owner,hc_practice_core.hc_group_front_desk,hc_practice_core.hc_group_provider"
+    />
+
+    <menuitem
+        id="menu_hc_configuration"
+        name="Configuration"
+        parent="hc_practice_core.menu_hc_root"
+        sequence="90"
+        groups="hc_practice_core.hc_group_owner,hc_practice_core.hc_group_front_desk"
+    />
+
+    <menuitem
+        id="menu_hc_practice"
+        name="Clinic / Practices"
+        parent="hc_practice_core.menu_hc_configuration"
+        action="hc_practice_core.action_hc_practice"
+        sequence="10"
+        groups="hc_practice_core.hc_group_owner"
+    />
+</odoo>

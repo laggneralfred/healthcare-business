@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_crm_lead_hc_owner,crm.lead hc owner,crm.model_crm_lead,hc_practice_core.hc_group_owner,1,1,1,0
+access_crm_lead_hc_front_desk,crm.lead hc front desk,crm.model_crm_lead,hc_practice_core.hc_group_front_desk,1,1,1,0
+access_crm_lead_hc_provider,crm.lead hc provider,crm.model_crm_lead,hc_practice_core.hc_group_provider,1,0,0,0

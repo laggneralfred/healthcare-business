@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_hc_consent_templates"
+        name="Consent Templates"
+        parent="hc_practice_core.menu_hc_configuration"
+        action="hc_consent.action_hc_consent_templates"
+        sequence="50"
+        groups="hc_practice_core.hc_group_owner"
+    />
+</odoo>

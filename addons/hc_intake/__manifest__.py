@@ -1,0 +1,26 @@
+{
+    "name": "Healthcare Intake",
+    "summary": "Sprint 2 intake readiness foundation",
+    "version": "19.0.1.0.0",
+    "category": "Healthcare",
+    "author": "Codex",
+    "license": "LGPL-3",
+    "depends": [
+        "base",
+        "hc_practice_core",
+        "hc_patient_core",
+        "hc_scheduling",
+    ],
+    "data": [
+        "security/ir.model.access.csv",
+        "views/hc_intake_template_views.xml",
+        "views/hc_intake_submission_views.xml",
+        "views/hc_intake_share_link_wizard_views.xml",
+        "views/hc_intake_public_templates.xml",
+        "views/hc_intake_patient_views.xml",
+        "views/hc_intake_appointment_views.xml",
+        "views/hc_intake_menus.xml",
+    ],
+    "installable": True,
+    "application": True,
+}

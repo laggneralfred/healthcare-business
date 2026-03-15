@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="public_intake_form" name="Public Intake Form">
+        <html>
+            <head>
+                <meta charset="utf-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                <title>Clinic Intake</title>
+                <style>
+                    body {
+                        margin: 0;
+                        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                        background: #f4f7f5;
+                        color: #24323d;
+                    }
+                    .hc-intake-shell {
+                        max-width: 760px;
+                        margin: 0 auto;
+                        padding: 32px 16px 48px;
+                    }
+                    .hc-intake-card {
+                        background: #ffffff;
+                        border: 1px solid #d7e0dc;
+                        border-radius: 16px;
+                        padding: 28px 24px;
+                        box-shadow: 0 10px 30px rgba(36, 50, 61, 0.08);
+                    }
+                    h1 {
+                        margin: 0 0 8px;
+                        font-size: 30px;
+                        line-height: 1.2;
+                    }
+                    p {
+                        margin: 0 0 16px;
+                        line-height: 1.5;
+                    }
+                    .hc-meta {
+                        color: #5c6b74;
+                        font-size: 14px;
+                    }
+                    .hc-error {
+                        margin: 16px 0;
+                        padding: 12px 14px;
+                        border-radius: 10px;
+                        background: #fff0ee;
+                        color: #8c2c1d;
+                    }
+                    .hc-field {
+                        margin-top: 18px;
+                    }
+                    .hc-field label {
+                        display: block;
+                        font-weight: 600;
+                        margin-bottom: 8px;
+                    }
+                    .hc-field textarea {
+                        width: 100%;
+                        min-height: 108px;
+                        padding: 12px 14px;
+                        border-radius: 12px;
+                        border: 1px solid #bcc9c3;
+                        box-sizing: border-box;
+                        font: inherit;
+                        color: inherit;
+                        background: #fcfdfc;
+                    }
+                    .hc-submit {
+                        margin-top: 24px;
+                        border: 0;
+                        border-radius: 999px;
+                        padding: 12px 18px;
+                        background: #2b6c5a;
+                        color: #ffffff;
+                        font: inherit;
+                        font-weight: 600;
+                        cursor: pointer;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="hc-intake-shell">
+                    <div class="hc-intake-card">
+                        <h1>Patient Intake</h1>
+                        <p class="hc-meta">
+                            <t t-esc="submission.practice_id.display_name"/>
+                            <t t-if="submission.patient_id">
+                                <span> · </span>
+                                <t t-esc="submission.patient_id.display_name"/>
+                            </t>
+                        </p>
+                        <p>Please complete the intake questions below. Fill in the sections that are relevant to your visit, then submit the form when you are done.</p>
+                        <div t-if="error_message" class="hc-error">
+                            <t t-esc="error_message"/>
+                        </div>
+                        <form t-att-action="form_action" method="post">
+                            <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
+                            <div class="hc-field">
+                                <label for="reason_for_visit">Reason for Visit</label>
+                                <textarea id="reason_for_visit" name="reason_for_visit" placeholder="Why are you coming in?"><t t-esc="form_values.get('reason_for_visit')"/></textarea>
+                            </div>
+                            <div class="hc-field">
+                                <label for="current_concerns">Current Concerns</label>
+                                <textarea id="current_concerns" name="current_concerns" placeholder="Current symptoms or concerns"><t t-esc="form_values.get('current_concerns')"/></textarea>
+                            </div>
+                            <div class="hc-field">
+                                <label for="relevant_history">Relevant History</label>
+                                <textarea id="relevant_history" name="relevant_history" placeholder="History that may help your care team"><t t-esc="form_values.get('relevant_history')"/></textarea>
+                            </div>
+                            <div class="hc-field">
+                                <label for="medications">Medications</label>
+                                <textarea id="medications" name="medications" placeholder="Current medications or supplements"><t t-esc="form_values.get('medications')"/></textarea>
+                            </div>
+                            <div class="hc-field">
+                                <label for="notes">Additional Notes</label>
+                                <textarea id="notes" name="notes" placeholder="Anything else you want the clinic to know"><t t-esc="form_values.get('notes')"/></textarea>
+                            </div>
+                            <button type="submit" class="hc-submit">Submit Intake</button>
+                        </form>
+                    </div>
+                </div>
+            </body>
+        </html>
+    </template>
+
+    <template id="public_intake_done" name="Public Intake Submitted">
+        <html>
+            <head>
+                <meta charset="utf-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                <title>Intake Submitted</title>
+                <style>
+                    body {
+                        margin: 0;
+                        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                        background: #f4f7f5;
+                        color: #24323d;
+                    }
+                    .hc-intake-shell {
+                        max-width: 760px;
+                        margin: 0 auto;
+                        padding: 32px 16px 48px;
+                    }
+                    .hc-intake-card {
+                        background: #ffffff;
+                        border: 1px solid #d7e0dc;
+                        border-radius: 16px;
+                        padding: 28px 24px;
+                        box-shadow: 0 10px 30px rgba(36, 50, 61, 0.08);
+                    }
+                    h1 {
+                        margin: 0 0 8px;
+                        font-size: 30px;
+                        line-height: 1.2;
+                    }
+                    p {
+                        margin: 0 0 16px;
+                        line-height: 1.5;
+                    }
+                    .hc-meta {
+                        color: #5c6b74;
+                        font-size: 14px;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="hc-intake-shell">
+                    <div class="hc-intake-card">
+                        <h1>
+                            <t t-if="already_submitted">Intake Already Received</t>
+                            <t t-else="">Intake Submitted</t>
+                        </h1>
+                        <p class="hc-meta">
+                            <t t-esc="submission.practice_id.display_name"/>
+                        </p>
+                        <p t-if="already_submitted">This intake was already submitted. No further action is needed, and you can close this page.</p>
+                        <p t-else="">Your intake has been submitted successfully. You can close this page.</p>
+                    </div>
+                </div>
+            </body>
+        </html>
+    </template>
+</odoo>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hc_encounter_list" model="ir.ui.view">
+        <field name="name">hc.encounter.list</field>
+        <field name="model">hc.encounter</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="encounter_date"/>
+                <field name="patient_id"/>
+                <field name="practitioner_id"/>
+                <field name="status"/>
+                <field name="appointment_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hc_encounter_form" model="ir.ui.view">
+        <field name="name">hc.encounter.form</field>
+        <field name="model">hc.encounter</field>
+        <field name="arch" type="xml">
+            <form string="Encounter">
+                <sheet>
+                    <div class="oe_title">
+                        <span class="o_form_label">Encounter</span>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Encounter">
+                            <field name="status"/>
+                            <field name="encounter_date"/>
+                            <field name="completed_on" readonly="1"/>
+                        </group>
+                        <group string="Readiness">
+                            <field name="intake_status" readonly="1"/>
+                            <button
+                                name="action_open_intake"
+                                string="Open Intake"
+                                type="object"
+                                class="btn-secondary"
+                                groups="hc_practice_core.hc_group_owner,hc_practice_core.hc_group_front_desk"
+                            />
+                            <field name="consent_status" readonly="1"/>
+                            <button
+                                name="action_open_consent"
+                                string="Open Consent"
+                                type="object"
+                                class="btn-secondary"
+                                groups="hc_practice_core.hc_group_owner,hc_practice_core.hc_group_front_desk"
+                            />
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Linked Record">
+                            <field name="patient_id" readonly="1"/>
+                            <field name="appointment_id" readonly="1"/>
+                            <field name="practice_id" readonly="1"/>
+                            <field name="practitioner_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Chief Concern">
+                        <field name="chief_concern" placeholder="Main reason for visit"/>
+                    </group>
+                    <group string="Visit Summary">
+                        <field name="visit_summary" placeholder="Short visit summary"/>
+                    </group>
+                    <group string="Treatment Notes">
+                        <field name="treatment_notes" placeholder="What was done during the visit"/>
+                    </group>
+                    <group string="Notes">
+                        <field name="notes" placeholder="Visit notes"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hc_encounters" model="ir.actions.act_window">
+        <field name="name">Encounters</field>
+        <field name="res_model">hc.encounter</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p>Use Encounters to capture the first layer of visit documentation from an appointment.</p>
+        </field>
+    </record>
+</odoo>

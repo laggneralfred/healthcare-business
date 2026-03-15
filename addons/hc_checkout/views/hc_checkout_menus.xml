@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_hc_checkout_sessions"
+        name="Checkout"
+        parent="hc_practice_core.menu_hc_root"
+        action="hc_checkout.action_hc_checkout_sessions"
+        sequence="40"
+        groups="hc_practice_core.hc_group_owner,hc_practice_core.hc_group_front_desk"
+    />
+</odoo>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hc_lead_list" model="ir.ui.view">
+        <field name="name">crm.lead.list.hc</field>
+        <field name="model">crm.lead</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" string="Name"/>
+                <field name="phone" string="Phone"/>
+                <field name="email_from" string="Email"/>
+                <field name="practice_id" string="Practice"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hc_lead_form" model="ir.ui.view">
+        <field name="name">crm.lead.form.hc</field>
+        <field name="model">crm.lead</field>
+        <field name="arch" type="xml">
+            <form string="Lead Inquiry">
+                <header>
+                    <button
+                        name="action_create_patient"
+                        string="Create Patient"
+                        type="object"
+                        class="btn-primary"
+                        groups="hc_practice_core.hc_group_owner,hc_practice_core.hc_group_front_desk"
+                    />
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Lead Inquiry" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="Patient or Contact Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Clinic">
+                            <field name="practice_id" string="Practice"/>
+                            <field name="is_hc_lead" invisible="1"/>
+                        </group>
+                        <group string="Contact">
+                            <field name="phone" string="Phone"/>
+                            <field name="email_from" string="Email"/>
+                        </group>
+                    </group>
+                    <group string="Notes">
+                        <field name="description" string="Notes" placeholder="Lead notes"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hc_leads" model="ir.actions.act_window">
+        <field name="name">Lead Inquiries</field>
+        <field name="res_model">crm.lead</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_hc_lead', '=', True)]</field>
+        <field name="context">{'default_is_hc_lead': True}</field>
+        <field name="help" type="html">
+            <p>Use Lead Inquiries for prospective patients who are not yet established patient records.</p>
+        </field>
+    </record>
+
+    <record id="action_hc_leads_list_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="hc_leads.view_hc_lead_list"/>
+        <field name="act_window_id" ref="hc_leads.action_hc_leads"/>
+    </record>
+
+    <record id="action_hc_leads_form_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="hc_leads.view_hc_lead_form"/>
+        <field name="act_window_id" ref="hc_leads.action_hc_leads"/>
+    </record>
+</odoo>

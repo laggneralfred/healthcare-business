@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hc_intake_submission_list" model="ir.ui.view">
+        <field name="name">hc.intake.submission.list</field>
+        <field name="model">hc.intake.submission</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="patient_id"/>
+                <field name="status"/>
+                <field name="submitted_on" string="Recorded On"/>
+                <field name="appointment_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hc_intake_submission_form" model="ir.ui.view">
+        <field name="name">hc.intake.submission.form</field>
+        <field name="model">hc.intake.submission</field>
+        <field name="arch" type="xml">
+            <form string="Intake Record">
+                <sheet>
+                    <group>
+                        <group string="Record Details">
+                            <field name="patient_id"/>
+                            <field name="practice_id"/>
+                            <field name="appointment_id"/>
+                            <field name="template_id" invisible="1"/>
+                            <field name="status"/>
+                            <field name="submitted_on"/>
+                        </group>
+                    </group>
+                    <group string="Intake Details">
+                        <field name="reason_for_visit" placeholder="Why is the patient coming in?"/>
+                        <field name="current_concerns" placeholder="Current concerns or symptoms"/>
+                        <field name="relevant_history" placeholder="Relevant history for this visit"/>
+                        <field name="medications" placeholder="Current medications or supplements"/>
+                        <field name="notes" placeholder="Additional intake notes"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

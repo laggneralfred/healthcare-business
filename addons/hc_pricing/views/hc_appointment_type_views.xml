@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hc_appointment_type_list_pricing" model="ir.ui.view">
+        <field name="name">hc.appointment.type.list.pricing</field>
+        <field name="model">hc.appointment.type</field>
+        <field name="inherit_id" ref="hc_scheduling.view_hc_appointment_type_list"/>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <field name="default_service_fee_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_hc_appointment_type_form_pricing" model="ir.ui.view">
+        <field name="name">hc.appointment.type.form.pricing</field>
+        <field name="model">hc.appointment.type</field>
+        <field name="inherit_id" ref="hc_scheduling.view_hc_appointment_type_form"/>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/group" position="inside">
+                <field
+                    name="default_service_fee_id"
+                    domain="[('practice_id', '=', practice_id)]"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>

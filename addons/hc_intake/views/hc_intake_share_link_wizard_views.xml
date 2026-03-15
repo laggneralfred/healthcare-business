@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hc_intake_share_link_wizard_form" model="ir.ui.view">
+        <field name="name">hc.intake.share.link.wizard.form</field>
+        <field name="model">hc.intake.share.link.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Patient Intake Link">
+                <sheet>
+                    <group>
+                        <field name="intake_submission_id" string="Intake Record" readonly="1"/>
+                        <field name="share_url" string="Public Intake Link" readonly="1" widget="url"/>
+                    </group>
+                    <div class="text-muted">Copy this link and send it to the patient manually outside Odoo.</div>
+                </sheet>
+                <footer>
+                    <button name="action_open_link" string="Open Link" type="object" class="btn-secondary"/>
+                    <button string="Close" special="cancel" class="btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

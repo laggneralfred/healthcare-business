@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_hc_appointments"
+        name="Appointments"
+        parent="hc_practice_core.menu_hc_root"
+        action="hc_scheduling.action_hc_appointments"
+        sequence="30"
+        groups="hc_practice_core.hc_group_owner,hc_practice_core.hc_group_front_desk,hc_practice_core.hc_group_provider"
+    />
+
+    <menuitem
+        id="menu_hc_practitioners"
+        name="Practitioners"
+        parent="hc_practice_core.menu_hc_configuration"
+        action="hc_scheduling.action_hc_practitioners"
+        sequence="20"
+        groups="hc_practice_core.hc_group_owner,hc_practice_core.hc_group_front_desk"
+    />
+
+    <menuitem
+        id="menu_hc_appointment_types"
+        name="Visit Types"
+        parent="hc_practice_core.menu_hc_configuration"
+        action="hc_scheduling.action_hc_appointment_types"
+        sequence="30"
+        groups="hc_practice_core.hc_group_owner"
+    />
+</odoo>

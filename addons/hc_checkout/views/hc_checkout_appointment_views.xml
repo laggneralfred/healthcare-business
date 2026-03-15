@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hc_appointment_form_checkout" model="ir.ui.view">
+        <field name="name">hc.appointment.form.checkout</field>
+        <field name="model">hc.appointment</field>
+        <field name="inherit_id" ref="hc_scheduling.view_hc_appointment_form"/>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form/header" position="inside">
+                <button
+                    name="action_start_checkout"
+                    string="Start Checkout"
+                    type="object"
+                    class="btn-secondary"
+                    invisible="visit_status != 'closed'"
+                    groups="hc_practice_core.hc_group_owner,hc_practice_core.hc_group_front_desk"
+                />
+            </xpath>
+            <xpath expr="//form/sheet/group" position="after">
+                <group string="Checkout Summary">
+                    <field name="checkout_status" readonly="1"/>
+                    <field
+                        name="checkout_amount_total"
+                        readonly="1"
+                        widget="monetary"
+                        options="{'currency_field': 'checkout_currency_id'}"
+                    />
+                    <field name="checkout_tender_type" readonly="1"/>
+                    <field name="checkout_paid_on" readonly="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

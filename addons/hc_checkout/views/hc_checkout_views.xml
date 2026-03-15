@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hc_checkout_session_list" model="ir.ui.view">
+        <field name="name">hc.checkout.session.list</field>
+        <field name="model">hc.checkout.session</field>
+        <field name="arch" type="xml">
+            <list create="false">
+                <field name="name"/>
+                <field name="appointment_id"/>
+                <field name="patient_id"/>
+                <field name="state"/>
+                <field name="amount_total"/>
+                <field name="tender_type"/>
+                <field name="paid_on"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hc_checkout_session_form" model="ir.ui.view">
+        <field name="name">hc.checkout.session.form</field>
+        <field name="model">hc.checkout.session</field>
+        <field name="arch" type="xml">
+            <form string="Checkout" create="false" duplicate="false">
+                <header>
+                    <button
+                        name="action_mark_cash_paid"
+                        string="Mark Cash Paid"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state != 'open'"
+                    />
+                    <button
+                        name="action_mark_card_paid"
+                        string="Mark Card Paid"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="state != 'open'"
+                    />
+                    <button
+                        name="action_mark_payment_due"
+                        string="Mark Payment Due"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="state != 'open'"
+                    />
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="open,paid,payment_due"
+                    />
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Checkout">
+                            <field name="name" readonly="1"/>
+                            <field name="appointment_id" readonly="1"/>
+                            <field name="patient_id" readonly="1"/>
+                            <field name="practitioner_id" readonly="1"/>
+                            <field name="appointment_start" readonly="1"/>
+                        </group>
+                        <group string="Summary">
+                            <field name="amount_total" readonly="1"/>
+                            <field name="currency_id" readonly="1"/>
+                            <field name="amount_paid" readonly="1"/>
+                            <field name="tender_type" readonly="1"/>
+                            <field name="paid_on" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Checkout Lines">
+                        <field name="checkout_line_ids" readonly="state != 'open'">
+                            <list editable="bottom">
+                                <field name="sequence"/>
+                                <field name="description"/>
+                                <field name="amount"/>
+                            </list>
+                        </field>
+                    </group>
+                    <group string="Notes">
+                        <field name="payment_note" readonly="state != 'open'"/>
+                        <field name="notes"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hc_checkout_sessions" model="ir.actions.act_window">
+        <field name="name">Checkout Sessions</field>
+        <field name="res_model">hc.checkout.session</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p>Review the clinic's minimal self-pay checkout sessions.</p>
+        </field>
+    </record>
+
+    <record id="action_hc_checkout_sessions_list_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="hc_checkout.view_hc_checkout_session_list"/>
+        <field name="act_window_id" ref="hc_checkout.action_hc_checkout_sessions"/>
+    </record>
+
+    <record id="action_hc_checkout_sessions_form_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="hc_checkout.view_hc_checkout_session_form"/>
+        <field name="act_window_id" ref="hc_checkout.action_hc_checkout_sessions"/>
+    </record>
+</odoo>

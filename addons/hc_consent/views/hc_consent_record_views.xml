@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hc_consent_record_list" model="ir.ui.view">
+        <field name="name">hc.consent.record.list</field>
+        <field name="model">hc.consent.record</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="patient_id"/>
+                <field name="status"/>
+                <field name="signed_on" string="Recorded On"/>
+                <field name="appointment_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hc_consent_record_form" model="ir.ui.view">
+        <field name="name">hc.consent.record.form</field>
+        <field name="model">hc.consent.record</field>
+        <field name="arch" type="xml">
+            <form string="Consent Record">
+                <sheet>
+                    <group>
+                        <group string="Record Details">
+                            <field name="patient_id"/>
+                            <field name="practice_id"/>
+                            <field name="appointment_id"/>
+                            <field name="template_id" invisible="1"/>
+                            <field name="status"/>
+                            <field name="signed_on"/>
+                        </group>
+                    </group>
+                    <group string="Consent Details">
+                        <field name="consent_given_by" placeholder="Who gave consent?"/>
+                        <field name="consent_summary" placeholder="Brief consent acknowledgment or summary"/>
+                        <field name="notes" placeholder="Additional consent notes"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

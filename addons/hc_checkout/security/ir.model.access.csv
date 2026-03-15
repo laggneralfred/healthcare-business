@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hc_checkout_session_owner,hc.checkout.session owner,model_hc_checkout_session,hc_practice_core.hc_group_owner,1,1,1,1
+access_hc_checkout_session_front_desk,hc.checkout.session front desk,model_hc_checkout_session,hc_practice_core.hc_group_front_desk,1,1,1,0
+access_hc_checkout_line_owner,hc.checkout.line owner,model_hc_checkout_line,hc_practice_core.hc_group_owner,1,1,1,1
+access_hc_checkout_line_front_desk,hc.checkout.line front desk,model_hc_checkout_line,hc_practice_core.hc_group_front_desk,1,1,1,0
