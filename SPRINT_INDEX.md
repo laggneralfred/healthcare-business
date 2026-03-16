@@ -3,7 +3,7 @@
 This index tracks frozen sprint baselines and the expected matching Git freeze tags for this repository.
 
 Current authoritative implemented baseline:
-- [SPRINT_9_HANDOFF.md](/home/alfre/healthcare-business/SPRINT_9_HANDOFF.md)
+- [SPRINT_10_HANDOFF.md](/home/alfre/healthcare-business/SPRINT_10_HANDOFF.md)
 
 Freeze tag naming convention:
 - `sprint-<number>-freeze`
@@ -29,6 +29,7 @@ Note:
 | 7 | [SPRINT_7_HANDOFF.md](/home/alfre/healthcare-business/SPRINT_7_HANDOFF.md) | `sprint-7-freeze` | Narrow post-close checkout baseline |
 | 8 | [SPRINT_8_HANDOFF.md](/home/alfre/healthcare-business/SPRINT_8_HANDOFF.md) | `sprint-8-freeze` | Structured pricing-default baseline |
 | 9 | [SPRINT_9_HANDOFF.md](/home/alfre/healthcare-business/SPRINT_9_HANDOFF.md) | `sprint-9-freeze` | Narrow multi-line checkout baseline |
+| 10 | [SPRINT_10_HANDOFF.md](/home/alfre/healthcare-business/SPRINT_10_HANDOFF.md) | `sprint-10-freeze` | Printable checkout summary baseline |
 
 ## Closure Reference
 

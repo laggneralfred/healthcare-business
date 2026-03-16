@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_hc_checkout_summary" model="ir.actions.report">
+        <field name="name">Checkout Summary</field>
+        <field name="model">hc.checkout.session</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">hc_checkout.report_hc_checkout_summary</field>
+        <field name="report_file">hc_checkout.report_hc_checkout_summary</field>
+        <field name="binding_model_id" ref="model_hc_checkout_session"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Checkout Summary - %s' % (object.name)</field>
+    </record>
+
+    <template id="report_hc_checkout_summary">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="session">
+                <div class="page">
+                    <h2>Checkout Summary</h2>
+                    <p>
+                        <strong>Practice:</strong>
+                        <span t-esc="session.appointment_id.practice_id.display_name"/>
+                    </p>
+                    <p>
+                        <strong>Checkout:</strong>
+                        <span t-esc="session.name"/>
+                    </p>
+                    <p>
+                        <strong>Patient:</strong>
+                        <span t-esc="session.patient_id.display_name"/>
+                    </p>
+                    <p>
+                        <strong>Appointment:</strong>
+                        <span t-esc="session.appointment_id.display_name"/>
+                    </p>
+                    <p>
+                        <strong>Appointment Start:</strong>
+                        <span t-field="session.appointment_start"/>
+                    </p>
+                    <p t-if="session.practitioner_id">
+                        <strong>Practitioner:</strong>
+                        <span t-esc="session.practitioner_id.display_name"/>
+                    </p>
+
+                    <table class="table table-sm o_main_table">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th class="text-end">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="session.checkout_line_ids" t-as="line">
+                                <td>
+                                    <span t-esc="line.description"/>
+                                </td>
+                                <td class="text-end">
+                                    <span t-esc="'%.2f' % line.amount"/>
+                                    <span t-esc="session.currency_id.symbol or session.currency_id.name"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>
+                        <strong>Total:</strong>
+                        <span t-esc="'%.2f' % session.amount_total"/>
+                        <span t-esc="session.currency_id.symbol or session.currency_id.name"/>
+                    </p>
+                    <p>
+                        <strong>Payment State:</strong>
+                        <span t-esc="dict(session._fields['state'].selection).get(session.state)"/>
+                    </p>
+                    <p t-if="session.state == 'paid'">
+                        <strong>Tender:</strong>
+                        <span t-esc="dict(session._fields['tender_type'].selection).get(session.tender_type)"/>
+                    </p>
+                    <p t-if="session.state == 'paid' and session.paid_on">
+                        <strong>Paid On:</strong>
+                        <span t-field="session.paid_on"/>
+                    </p>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

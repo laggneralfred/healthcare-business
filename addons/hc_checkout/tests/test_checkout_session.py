@@ -409,3 +409,55 @@ class TestCheckoutSession(TransactionCase):
         self.assertEqual(len(session.checkout_line_ids), 1)
         self.assertEqual(session.checkout_line_ids.description, "Legacy Charge")
         self.assertEqual(session.checkout_line_ids.amount, 77.0)
+
+    def test_checkout_summary_report_renders_session_context(self):
+        appointment = self._create_appointment(visit_status="closed")
+        session = self.env["hc.checkout.session"].create(
+            {
+                "appointment_id": appointment.id,
+                "charge_label": "Visit Charge",
+                "amount_total": 60.0,
+            }
+        )
+        self.env["hc.checkout.line"].create(
+            {
+                "checkout_session_id": session.id,
+                "sequence": 20,
+                "description": "Supplemental Charge",
+                "amount": 15.0,
+            }
+        )
+
+        report = self.env.ref("hc_checkout.action_report_hc_checkout_summary")
+        html, _ = report._render_qweb_html(report.report_name, session.ids)
+        rendered = html.decode()
+
+        self.assertIn("Checkout Summary", rendered)
+        self.assertIn(self.practice.name, rendered)
+        self.assertIn(self.patient.name, rendered)
+        self.assertIn(appointment.display_name, rendered)
+        self.assertIn("Visit Charge", rendered)
+        self.assertIn("Supplemental Charge", rendered)
+        self.assertIn("75.00", rendered)
+        self.assertIn("Open", rendered)
+
+    def test_paid_checkout_summary_report_shows_tender_for_front_desk(self):
+        appointment = self._create_appointment(visit_status="closed")
+        session = self.env["hc.checkout.session"].create(
+            {
+                "appointment_id": appointment.id,
+                "charge_label": "Visit Charge",
+                "amount_total": 90.0,
+            }
+        )
+        session.action_mark_card_paid()
+
+        report = self.env.ref("hc_checkout.action_report_hc_checkout_summary").with_user(
+            self.front_desk_user
+        )
+        html, _ = report._render_qweb_html(report.report_name, session.ids)
+        rendered = html.decode()
+
+        self.assertIn("Paid", rendered)
+        self.assertIn("Card", rendered)
+        self.assertIn("90.00", rendered)
