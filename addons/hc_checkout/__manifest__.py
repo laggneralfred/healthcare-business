@@ -16,6 +16,7 @@
         "reports/hc_checkout_summary_report.xml",
         "views/hc_checkout_views.xml",
         "views/hc_checkout_appointment_views.xml",
+        "views/hc_checkout_patient_views.xml",
         "views/hc_checkout_menus.xml",
     ],
     "installable": True,

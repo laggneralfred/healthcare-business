@@ -76,11 +76,12 @@ class TestCheckoutSession(TransactionCase):
             }
         )
 
-    def _create_appointment(self, visit_status="scheduled", needs_follow_up=False):
+    def _create_appointment(self, visit_status="scheduled", needs_follow_up=False, patient=None):
         start_datetime = fields.Datetime.now()
+        patient = patient or self.patient
         return self.env["hc.appointment"].create(
             {
-                "patient_id": self.patient.id,
+                "patient_id": patient.id,
                 "practitioner_id": self.practitioner.id,
                 "practice_id": self.practice.id,
                 "appointment_type_id": self.appointment_type.id,
@@ -530,3 +531,103 @@ class TestCheckoutSession(TransactionCase):
 
         self.assertEqual(action["type"], "ir.actions.report")
         self.assertEqual(action["report_name"], "hc_checkout.report_hc_payment_due")
+
+    def test_patient_statement_renders_only_unpaid_sessions(self):
+        other_patient = self.env["res.partner"].create(
+            {
+                "name": "Other Checkout Patient",
+                "is_hc_patient": True,
+                "practice_id": self.practice.id,
+            }
+        )
+        unpaid_appointment = self._create_appointment(visit_status="closed")
+        second_unpaid_appointment = self._create_appointment(visit_status="closed")
+        paid_appointment = self._create_appointment(visit_status="closed")
+        other_patient_appointment = self._create_appointment(
+            visit_status="closed",
+            patient=other_patient,
+        )
+
+        first_unpaid = self.env["hc.checkout.session"].create(
+            {
+                "appointment_id": unpaid_appointment.id,
+                "charge_label": "Visit Charge",
+                "amount_total": 60.0,
+                "payment_note": "Please settle soon.",
+            }
+        )
+        self.env["hc.checkout.line"].create(
+            {
+                "checkout_session_id": first_unpaid.id,
+                "sequence": 20,
+                "description": "Supplemental Charge",
+                "amount": 15.0,
+            }
+        )
+        first_unpaid.action_mark_payment_due()
+
+        second_unpaid = self.env["hc.checkout.session"].create(
+            {
+                "appointment_id": second_unpaid_appointment.id,
+                "charge_label": "Follow-Up Charge",
+                "amount_total": 40.0,
+            }
+        )
+        second_unpaid.action_mark_payment_due()
+
+        paid_session = self.env["hc.checkout.session"].create(
+            {
+                "appointment_id": paid_appointment.id,
+                "charge_label": "Paid Charge",
+                "amount_total": 20.0,
+            }
+        )
+        paid_session.action_mark_cash_paid()
+
+        other_patient_session = self.env["hc.checkout.session"].create(
+            {
+                "appointment_id": other_patient_appointment.id,
+                "charge_label": "Other Patient Charge",
+                "amount_total": 30.0,
+            }
+        )
+        other_patient_session.action_mark_payment_due()
+
+        report = self.env.ref("hc_checkout.action_report_hc_patient_statement")
+        html, _ = report._render_qweb_html(report.report_name, self.patient.ids)
+        rendered = html.decode()
+
+        self.assertIn("Patient Statement", rendered)
+        self.assertIn(self.practice.name, rendered)
+        self.assertIn(self.patient.name, rendered)
+        self.assertIn(first_unpaid.name, rendered)
+        self.assertIn(second_unpaid.name, rendered)
+        self.assertIn("Supplemental Charge", rendered)
+        self.assertIn("115.00", rendered)
+        self.assertIn("Please settle soon.", rendered)
+        self.assertNotIn(paid_session.name, rendered)
+        self.assertNotIn(other_patient.name, rendered)
+        self.assertNotIn(other_patient_session.name, rendered)
+
+    def test_patient_statement_action_is_blocked_without_unpaid_sessions(self):
+        with self.assertRaisesRegex(
+            UserError,
+            "Patient statement is only available when unpaid checkout sessions exist.",
+        ):
+            self.patient.action_print_patient_statement()
+
+    def test_front_desk_can_print_patient_statement(self):
+        appointment = self._create_appointment(visit_status="closed")
+        session = self.env["hc.checkout.session"].create(
+            {
+                "appointment_id": appointment.id,
+                "charge_label": "Visit Charge",
+                "amount_total": 90.0,
+            }
+        )
+        session.action_mark_payment_due()
+
+        action = self.patient.with_user(self.front_desk_user).action_print_patient_statement()
+
+        self.assertEqual(action["type"], "ir.actions.report")
+        self.assertEqual(action["report_name"], "hc_checkout.report_hc_patient_statement")

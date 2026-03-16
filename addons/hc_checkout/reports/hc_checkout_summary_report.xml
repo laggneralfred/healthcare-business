@@ -20,6 +20,15 @@
         <field name="print_report_name">'Payment Due - %s' % (object.name)</field>
     </record>
 
+    <record id="action_report_hc_patient_statement" model="ir.actions.report">
+        <field name="name">Patient Statement</field>
+        <field name="model">res.partner</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">hc_checkout.report_hc_patient_statement</field>
+        <field name="report_file">hc_checkout.report_hc_patient_statement</field>
+        <field name="print_report_name">'Patient Statement - %s' % (object.name)</field>
+    </record>
+
     <template id="report_hc_checkout_summary">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="session">
@@ -154,6 +163,80 @@
                     <p t-if="session.payment_note">
                         <strong>Due Note:</strong>
                         <span t-esc="session.payment_note"/>
+                    </p>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_hc_patient_statement">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="patient">
+                <t t-set="sessions" t-value="patient._get_payment_due_checkout_sessions()"/>
+                <div class="page">
+                    <h2>Patient Statement</h2>
+                    <p t-if="patient._get_patient_statement_practice()">
+                        <strong>Practice:</strong>
+                        <span t-esc="patient._get_patient_statement_practice().display_name"/>
+                    </p>
+                    <p>
+                        <strong>Patient:</strong>
+                        <span t-esc="patient.display_name"/>
+                    </p>
+
+                    <table class="table table-sm o_main_table">
+                        <thead>
+                            <tr>
+                                <th>Checkout</th>
+                                <th>Appointment</th>
+                                <th>Appointment Start</th>
+                                <th class="text-end">Amount Due</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="sessions" t-as="session">
+                                <tr>
+                                    <td>
+                                        <span t-esc="session.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="session.appointment_id.display_name"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="session.appointment_start"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-esc="'%.2f' % session.amount_total"/>
+                                        <span t-esc="session.currency_id.symbol or session.currency_id.name"/>
+                                    </td>
+                                </tr>
+                                <tr t-if="session.checkout_line_ids or session.payment_note">
+                                    <td colspan="4">
+                                        <div t-if="session.checkout_line_ids">
+                                            <strong>Lines:</strong>
+                                            <ul>
+                                                <li t-foreach="session.checkout_line_ids" t-as="line">
+                                                    <span t-esc="line.description"/>
+                                                    <span> - </span>
+                                                    <span t-esc="'%.2f' % line.amount"/>
+                                                    <span t-esc="session.currency_id.symbol or session.currency_id.name"/>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <p t-if="session.payment_note">
+                                            <strong>Note:</strong>
+                                            <span t-esc="session.payment_note"/>
+                                        </p>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+
+                    <p>
+                        <strong>Total Due:</strong>
+                        <span t-esc="'%.2f' % patient._get_payment_due_total()"/>
+                        <span t-esc="sessions[:1].currency_id.symbol or sessions[:1].currency_id.name"/>
                     </p>
                 </div>
             </t>

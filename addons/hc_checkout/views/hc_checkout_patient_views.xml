@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hc_patient_form_checkout_statement" model="ir.ui.view">
+        <field name="name">res.partner.form.hc.patient.checkout.statement</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="hc_patient_core.view_hc_patient_form"/>
+        <field name="priority">60</field>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_create_appointment']" position="after">
+                <button
+                    name="action_print_patient_statement"
+                    string="Print Patient Statement"
+                    type="object"
+                    class="btn-secondary"
+                    groups="hc_practice_core.hc_group_owner,hc_practice_core.hc_group_front_desk"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>
