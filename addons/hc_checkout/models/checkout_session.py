@@ -272,3 +272,9 @@ class HcCheckoutSession(models.Model):
             }
         )
         return True
+
+    def action_print_payment_due(self):
+        self.ensure_one()
+        if self.state != "payment_due":
+            raise UserError("Payment Due document is only available for payment-due checkouts.")
+        return self.env.ref("hc_checkout.action_report_hc_payment_due").report_action(self)

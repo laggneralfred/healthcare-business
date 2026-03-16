@@ -23,6 +23,13 @@
             <form string="Checkout" create="false" duplicate="false">
                 <header>
                     <button
+                        name="action_print_payment_due"
+                        string="Print Payment Due"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="state != 'payment_due'"
+                    />
+                    <button
                         name="action_mark_cash_paid"
                         string="Mark Cash Paid"
                         type="object"

@@ -461,3 +461,72 @@ class TestCheckoutSession(TransactionCase):
         self.assertIn("Paid", rendered)
         self.assertIn("Card", rendered)
         self.assertIn("90.00", rendered)
+
+    def test_payment_due_document_renders_due_context(self):
+        appointment = self._create_appointment(visit_status="closed")
+        session = self.env["hc.checkout.session"].create(
+            {
+                "appointment_id": appointment.id,
+                "charge_label": "Visit Charge",
+                "amount_total": 60.0,
+                "payment_note": "Please pay at your next visit.",
+            }
+        )
+        self.env["hc.checkout.line"].create(
+            {
+                "checkout_session_id": session.id,
+                "sequence": 20,
+                "description": "Supplemental Charge",
+                "amount": 15.0,
+            }
+        )
+        session.action_mark_payment_due()
+
+        report = self.env.ref("hc_checkout.action_report_hc_payment_due")
+        html, _ = report._render_qweb_html(report.report_name, session.ids)
+        rendered = html.decode()
+
+        self.assertIn("Payment Due", rendered)
+        self.assertIn(self.practice.name, rendered)
+        self.assertIn(self.patient.name, rendered)
+        self.assertIn(appointment.display_name, rendered)
+        self.assertIn("Visit Charge", rendered)
+        self.assertIn("Supplemental Charge", rendered)
+        self.assertIn("75.00", rendered)
+        self.assertIn("Payment Due", rendered)
+        self.assertIn("Please pay at your next visit.", rendered)
+        self.assertNotIn("Card", rendered)
+        self.assertNotIn("Cash", rendered)
+
+    def test_payment_due_document_action_is_blocked_unless_payment_due(self):
+        appointment = self._create_appointment(visit_status="closed")
+        session = self.env["hc.checkout.session"].create(
+            {
+                "appointment_id": appointment.id,
+                "charge_label": "Visit Charge",
+                "amount_total": 60.0,
+            }
+        )
+
+        with self.assertRaisesRegex(
+            UserError,
+            "Payment Due document is only available for payment-due checkouts.",
+        ):
+            session.action_print_payment_due()
+
+    def test_front_desk_can_print_payment_due_document(self):
+        appointment = self._create_appointment(visit_status="closed")
+        session = self.env["hc.checkout.session"].create(
+            {
+                "appointment_id": appointment.id,
+                "charge_label": "Visit Charge",
+                "amount_total": 90.0,
+                "payment_note": "Payment remains due.",
+            }
+        )
+        session.action_mark_payment_due()
+
+        action = session.with_user(self.front_desk_user).action_print_payment_due()
+
+        self.assertEqual(action["type"], "ir.actions.report")
+        self.assertEqual(action["report_name"], "hc_checkout.report_hc_payment_due")
