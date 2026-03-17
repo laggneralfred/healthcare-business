@@ -3,3 +3,7 @@ __pycache__/
 logs/
 *.zip
 .DS_Store
+node_modules/
+playwright-report/
+test-results/
+addons/.playwright-smoke-data.json

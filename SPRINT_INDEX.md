@@ -3,7 +3,7 @@
 This index tracks frozen sprint baselines and the expected matching Git freeze tags for this repository.
 
 Current authoritative implemented baseline:
-- [SPRINT_13_HANDOFF.md](/home/alfre/healthcare-business/SPRINT_13_HANDOFF.md)
+- [SPRINT_18_HANDOFF.md](/home/alfre/healthcare-business/SPRINT_18_HANDOFF.md)
 
 Freeze tag naming convention:
 - `sprint-<number>-freeze`
@@ -33,6 +33,18 @@ Note:
 | 11 | [SPRINT_11_HANDOFF.md](/home/alfre/healthcare-business/SPRINT_11_HANDOFF.md) | `sprint-11-freeze` | Payment-due document baseline |
 | 12 | [SPRINT_12_HANDOFF.md](/home/alfre/healthcare-business/SPRINT_12_HANDOFF.md) | `sprint-12-freeze` | Patient-level unpaid summary baseline |
 | 13 | [SPRINT_13_HANDOFF.md](/home/alfre/healthcare-business/SPRINT_13_HANDOFF.md) | `sprint-13-freeze` | Late-payment capture baseline |
+| 18 | [SPRINT_18_HANDOFF.md](/home/alfre/healthcare-business/SPRINT_18_HANDOFF.md) | `sprint-18-freeze` | Tiny Playwright pilot-support smoke-suite baseline |
+
+## Frozen Decision Records
+
+These are frozen sprint records, but they are not implemented product baselines and do not define freeze tags in this index by default.
+
+| Sprint | Frozen Record | Posture Summary |
+| --- | --- | --- |
+| 14 | [SPRINT_14_DECISION.md](/home/alfre/healthcare-business/SPRINT_14_DECISION.md) | Stay lightweight/custom in `hc_checkout` for now |
+| 15 | [SPRINT_15_DECISION.md](/home/alfre/healthcare-business/SPRINT_15_DECISION.md) | No UX-hardening implementation authorized without stronger evidence |
+| 16 | [SPRINT_16_DECISION.md](/home/alfre/healthcare-business/SPRINT_16_DECISION.md) | Pilot-readiness checklist and decision only |
+| 17 | [SPRINT_17_DECISION.md](/home/alfre/healthcare-business/SPRINT_17_DECISION.md) | Playwright recommended; only a tiny smoke suite justified |
 
 ## Closure Reference
 

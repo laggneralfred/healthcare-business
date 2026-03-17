@@ -1,0 +1,11 @@
+{
+  "name": "healthcare-business",
+  "private": true,
+  "scripts": {
+    "smoke:setup": "bash -lc \"docker compose exec -T odoo odoo shell -d healthcare_dev < scripts/setup_playwright_smoke_data.py | tee addons/.playwright-smoke-data.json >/dev/null\"",
+    "smoke:test": "playwright test tests/playwright/smoke.spec.js"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.53.0"
+  }
+}
