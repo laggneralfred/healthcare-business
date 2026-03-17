@@ -234,31 +234,32 @@ class HcCheckoutSession(models.Model):
         if self.state != "open":
             raise UserError("Only open checkout sessions can be updated.")
 
-    def action_mark_cash_paid(self):
+    def _ensure_payment_due_state(self):
         self.ensure_one()
-        self._ensure_open_state()
+        if self.state != "payment_due":
+            raise UserError("Only payment-due checkout sessions can be updated this way.")
+
+    def _mark_paid(self, tender_type):
+        self.ensure_one()
         self.write(
             {
                 "state": "paid",
-                "tender_type": "cash",
+                "tender_type": tender_type,
                 "amount_paid": self.amount_total,
                 "paid_on": fields.Datetime.now(),
             }
         )
         return True
 
+    def action_mark_cash_paid(self):
+        self.ensure_one()
+        self._ensure_open_state()
+        return self._mark_paid("cash")
+
     def action_mark_card_paid(self):
         self.ensure_one()
         self._ensure_open_state()
-        self.write(
-            {
-                "state": "paid",
-                "tender_type": "card",
-                "amount_paid": self.amount_total,
-                "paid_on": fields.Datetime.now(),
-            }
-        )
-        return True
+        return self._mark_paid("card")
 
     def action_mark_payment_due(self):
         self.ensure_one()
@@ -278,3 +279,13 @@ class HcCheckoutSession(models.Model):
         if self.state != "payment_due":
             raise UserError("Payment Due document is only available for payment-due checkouts.")
         return self.env.ref("hc_checkout.action_report_hc_payment_due").report_action(self)
+
+    def action_collect_cash_payment(self):
+        self.ensure_one()
+        self._ensure_payment_due_state()
+        return self._mark_paid("cash")
+
+    def action_collect_card_payment(self):
+        self.ensure_one()
+        self._ensure_payment_due_state()
+        return self._mark_paid("card")

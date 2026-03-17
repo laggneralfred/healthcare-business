@@ -631,3 +631,132 @@ class TestCheckoutSession(TransactionCase):
 
         self.assertEqual(action["type"], "ir.actions.report")
         self.assertEqual(action["report_name"], "hc_checkout.report_hc_patient_statement")
+
+    def test_collect_cash_payment_only_works_for_payment_due(self):
+        appointment = self._create_appointment(visit_status="closed")
+        session = self.env["hc.checkout.session"].create(
+            {
+                "appointment_id": appointment.id,
+                "charge_label": "Visit Charge",
+                "amount_total": 60.0,
+            }
+        )
+
+        with self.assertRaisesRegex(
+            UserError,
+            "Only payment-due checkout sessions can be updated this way.",
+        ):
+            session.action_collect_cash_payment()
+
+        session.action_mark_payment_due()
+        result = session.action_collect_cash_payment()
+
+        self.assertTrue(result)
+        session.invalidate_recordset(["state", "tender_type", "amount_paid", "paid_on"])
+        self.assertEqual(session.state, "paid")
+        self.assertEqual(session.tender_type, "cash")
+        self.assertEqual(session.amount_paid, 60.0)
+        self.assertTrue(session.paid_on)
+
+    def test_collect_card_payment_preserves_checkout_content_and_exits_patient_statement(self):
+        appointment = self._create_appointment(visit_status="closed")
+        session = self.env["hc.checkout.session"].create(
+            {
+                "appointment_id": appointment.id,
+                "charge_label": "Visit Charge",
+                "amount_total": 60.0,
+                "payment_note": "Please settle soon.",
+            }
+        )
+        service_fee = False
+        if "service_fee_id" in session._fields:
+            service_fee = self.env["hc.service.fee"].create(
+                {
+                    "name": "Statement Test Fee",
+                    "practice_id": self.practice.id,
+                    "default_price": 60.0,
+                }
+            )
+            session.write({"service_fee_id": service_fee.id})
+        self.env["hc.checkout.line"].create(
+            {
+                "checkout_session_id": session.id,
+                "sequence": 20,
+                "description": "Supplemental Charge",
+                "amount": 15.0,
+            }
+        )
+        session.action_mark_payment_due()
+
+        original_line_values = [
+            (line.sequence, line.description, line.amount)
+            for line in session.checkout_line_ids.sorted(key=lambda line: (line.sequence, line.id))
+        ]
+        original_amount_total = session.amount_total
+        original_charge_label = session.charge_label
+        original_service_fee = getattr(session, "service_fee_id", False)
+
+        result = session.action_collect_card_payment()
+
+        self.assertTrue(result)
+        session.invalidate_recordset(
+            ["state", "tender_type", "amount_paid", "paid_on", "amount_total", "charge_label"]
+        )
+        self.assertEqual(session.state, "paid")
+        self.assertEqual(session.tender_type, "card")
+        self.assertEqual(session.amount_paid, original_amount_total)
+        self.assertTrue(session.paid_on)
+        self.assertEqual(session.amount_total, original_amount_total)
+        self.assertEqual(session.charge_label, original_charge_label)
+        self.assertEqual(
+            [
+                (line.sequence, line.description, line.amount)
+                for line in session.checkout_line_ids.sorted(key=lambda line: (line.sequence, line.id))
+            ],
+            original_line_values,
+        )
+        if "service_fee_id" in session._fields:
+            self.assertEqual(session.service_fee_id, original_service_fee)
+
+        statement_report = self.env.ref("hc_checkout.action_report_hc_patient_statement")
+        html, _ = statement_report._render_qweb_html(statement_report.report_name, self.patient.ids)
+        rendered = html.decode()
+        self.assertNotIn(session.name, rendered)
+
+    def test_collect_card_payment_blocked_once_session_is_paid(self):
+        appointment = self._create_appointment(visit_status="closed")
+        session = self.env["hc.checkout.session"].create(
+            {
+                "appointment_id": appointment.id,
+                "charge_label": "Visit Charge",
+                "amount_total": 60.0,
+            }
+        )
+        session.action_mark_payment_due()
+        session.action_collect_card_payment()
+
+        with self.assertRaisesRegex(
+            UserError,
+            "Only payment-due checkout sessions can be updated this way.",
+        ):
+            session.action_collect_card_payment()
+
+    def test_front_desk_can_collect_late_payment(self):
+        appointment = self._create_appointment(visit_status="closed")
+        session = self.env["hc.checkout.session"].create(
+            {
+                "appointment_id": appointment.id,
+                "charge_label": "Visit Charge",
+                "amount_total": 90.0,
+            }
+        )
+        session.action_mark_payment_due()
+
+        result = session.with_user(self.front_desk_user).action_collect_cash_payment()
+
+        self.assertTrue(result)
+        session.invalidate_recordset(["state", "tender_type", "amount_paid", "paid_on"])
+        self.assertEqual(session.state, "paid")
+        self.assertEqual(session.tender_type, "cash")
+        self.assertEqual(session.amount_paid, 90.0)
+        self.assertTrue(session.paid_on)

@@ -23,6 +23,20 @@
             <form string="Checkout" create="false" duplicate="false">
                 <header>
                     <button
+                        name="action_collect_cash_payment"
+                        string="Collect Cash Payment"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state != 'payment_due'"
+                    />
+                    <button
+                        name="action_collect_card_payment"
+                        string="Collect Card Payment"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="state != 'payment_due'"
+                    />
+                    <button
                         name="action_print_payment_due"
                         string="Print Payment Due"
                         type="object"
